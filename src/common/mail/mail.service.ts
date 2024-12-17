@@ -1,20 +1,22 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
+import { rejects } from "assert";
 import * as nodemail from "nodemailer";
+import { resolve } from "path";
 
 @Injectable()
 export class MailService {
-  private transporter: nodemail.Transporter;
+  // private transporter: nodemail.Transporter;
   constructor(private config: ConfigService) {
-    this.transporter = nodemail.createTransport({
-      host: config.get<string>('EMAIL_HOST'),
-      port: config.get<Number>('EMAIL_PORT'),
-      secure: config.get<string>('EMAIL_SECURE'),
-      auth: {
-        user: config.get<string>('EMAIL_USER'),
-        pass: config.get<string>('EMAIL_PASS'),
-      },
-    });
+    // this.transporter = nodemail.createTransport({
+    //   host: config.get<string>('EMAIL_HOST'),
+    //   port: config.get<Number>('EMAIL_PORT'),
+    //   secure: config.get<string>('EMAIL_SECURE'),
+    //   auth: {
+    //     user: config.get<string>('EMAIL_USER'),
+    //     pass: config.get<string>('EMAIL_PASS'),
+    //   },
+    // });
   }
 
   /**
@@ -36,17 +38,18 @@ export class MailService {
       html,
     };
     console.log(`用户验证码为：${code}，有效期为5分钟，请及时使用!`)
-    return new Promise((resolve, reject) => {
-      this.transporter.sendMail(mailOptions, (error: Error, info: { envelope: Record<string, string[]> }) => {
-        if (error) {
-          reject(new HttpException(`发送邮件失败:${error}`, HttpStatus.INTERNAL_SERVER_ERROR));
-        } else {
-          resolve({
-            code,
-            ...info.envelope
-          })
-        }
-      });
-    })
+    return new Promise((resolve, reject) => {resolve({code: '1234'})})
+    // return new Promise((resolve, reject) => {
+    //   this.transporter.sendMail(mailOptions, (error: Error, info: { envelope: Record<string, string[]> }) => {
+    //     if (error) {
+    //       reject(new HttpException(`发送邮件失败:${error}`, HttpStatus.INTERNAL_SERVER_ERROR));
+    //     } else {
+    //       resolve({
+    //         code,
+    //         ...info.envelope
+    //       })
+    //     }
+    //   });
+    // })
   }
 }

@@ -6,6 +6,7 @@ import { UserService } from 'src/user/user.service';
 import { ForgotUserDto } from './dto/forgot-user.dto';
 import { AllowNoToken } from 'src/common/decorators/token.decorator';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiBody, ApiQuery } from '@nestjs/swagger';
 @Controller('sys')
 export class SysController {
   @Inject(UserService)
@@ -43,6 +44,18 @@ export class SysController {
   // 发送注册邮箱验证码
   @Get('sendEmailForRegistry')
   @AllowNoToken()
+  @ApiQuery({
+    schema: {
+      type: 'object',
+      properties: {
+        email: {
+          type: 'string',
+          example: 'foo@email.com',
+        },
+      },
+      required: ['email']
+    }
+  })
   sendEmailForRegistry(@Query() dto: { email: string }) {
     return this.sysService.sendMailForRegistry(dto.email,'注册验证码');
   }
